@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -24,12 +22,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController taskController = TextEditingController();
-  final List<Task> tasks = [
-    Task(title: 'test 1'),
-    Task(title: 'test 2'),
-    Task(title: 'test 3'),
-    Task(title: 'test 4'),
-  ];
+  final List<Task> tasks = [];
 
   void addTask({required String title}) {
     if (title.isEmpty) return;
@@ -132,8 +125,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            if (tasks.isEmpty)
+              Container(
+                padding: .all(10),
+                margin: .all(10),
+                alignment: .center,
+                decoration: BoxDecoration(
+                  borderRadius: .circular(10),
+                  color: Colors.deepPurple.shade100,
+                ),
+                child: Text(
+                  "Let's create your first task by click on `+` floating button ✨.",
+                  style: TextStyle(color: Colors.deepPurple, fontSize: 13),
+                ),
+              ),
             ...tasks.map(
               (element) => ListTile(
+                titleAlignment: .top,
                 leading: Checkbox(
                   value: element.isCompleted,
                   onChanged: (_) => toggleTask(tasks.indexOf(element)),
@@ -147,7 +155,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: const ButtonStyle(tapTargetSize: .shrinkWrap),
                   icon: Icon(Icons.delete),
                 ),
-                title: Text(element.title),
+                title: Text(
+                  element.title,
+                  style: TextStyle(
+                    decoration: element.isCompleted ? .lineThrough : .none,
+                  ),
+                ),
                 subtitle: Text(
                   "Created At: ${element.createdAt.year}-${element.createdAt.month}-${element.createdAt.day}",
                   style: TextStyle(color: Colors.grey, fontSize: 12),
@@ -172,13 +185,20 @@ class CreateTaskDialog extends StatelessWidget {
       alignment: .center,
       backgroundColor: Colors.white,
       child: Padding(
-        padding: const .all(10),
+        padding: const .symmetric(vertical: 20, horizontal: 10),
         child: Column(
           mainAxisAlignment: .center,
-          crossAxisAlignment: .end,
+          crossAxisAlignment: .start,
           mainAxisSize: .min,
           spacing: 10,
           children: [
+            Padding(
+              padding: const .symmetric(horizontal: 10),
+              child: Text(
+                "Task title:",
+                style: TextStyle(color: Colors.deepPurple, fontWeight: .bold),
+              ),
+            ),
             TextField(
               controller: taskController,
               onTapOutside: (event) =>
@@ -202,12 +222,21 @@ class CreateTaskDialog extends StatelessWidget {
                     color: Colors.deepPurple.withValues(alpha: 0.2),
                   ),
                 ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(
+                    color: Colors.deepPurple.withValues(alpha: 0.4),
+                  ),
+                ),
               ),
             ),
-            ElevatedButton(
-              onPressed: onSave,
-              style: ButtonStyle(backgroundColor: .all(Colors.deepPurple)),
-              child: Text("Save", style: TextStyle(color: Colors.white)),
+            Align(
+              alignment: .centerRight,
+              child: ElevatedButton(
+                onPressed: onSave,
+                style: ButtonStyle(backgroundColor: .all(Colors.deepPurple)),
+                child: Text("Save", style: TextStyle(color: Colors.white)),
+              ),
             ),
           ],
         ),
