@@ -103,20 +103,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: .spaceBetween,
                     crossAxisAlignment: .center,
                     children: [
-                      Column(
-                        mainAxisAlignment: .center,
-                        crossAxisAlignment: .start,
-                        mainAxisSize: .min,
-                        children: [
-                          Text(
-                            isRTL ? Titles.rtl.taskTitle : Titles.ltr.taskTitle,
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                          Text(
-                            isRTL ? Titles.rtl.taskBody : Titles.ltr.taskBody,
-                            style: TextStyle(fontSize: 12, color: Colors.white),
-                          ),
-                        ],
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: .center,
+                          crossAxisAlignment: .start,
+                          mainAxisSize: .min,
+                          children: [
+                            Text(
+                              isRTL
+                                  ? Titles.rtl.taskTitle
+                                  : Titles.ltr.taskTitle,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              isRTL ? Titles.rtl.taskBody : Titles.ltr.taskBody,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: .center,
@@ -169,25 +179,61 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
               ...tasks.map(
-                (element) => ListTile(
-                  leading: Checkbox(
-                    value: element.isCompleted,
-                    onChanged: (_) => toggleTask(tasks.indexOf(element)),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () => deleteTask(tasks.indexOf(element)),
-                    color: Colors.deepPurple,
-                    padding: .all(5),
-                    iconSize: 20,
-                    constraints: const BoxConstraints(),
-                    style: const ButtonStyle(tapTargetSize: .shrinkWrap),
-                    icon: Icon(Icons.delete),
-                  ),
-                  title: Text(element.title),
-                  subtitle: Text(
-                    "${isRTL ? Titles.rtl.taskCreationDate : Titles.ltr.taskCreationDate}: ${element.createdAt.year}-${element.createdAt.month}-${element.createdAt.day}",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                (element) => GestureDetector(
+                  onTap: () => toggleTask(tasks.indexOf(element)),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: .all(10),
+                    margin: .symmetric(vertical: 5, horizontal: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: .circular(10),
+                      color: element.isCompleted
+                          ? Colors.deepPurple.withAlpha(40)
+                          : Colors.deepPurple.withAlpha(10),
+                      border: .all(color: Colors.deepPurple.withAlpha(100)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: .center,
+                      crossAxisAlignment: .start,
+                      spacing: 5,
+                      children: [
+                        Checkbox(value: element.isCompleted, onChanged: (_) {}),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: .center,
+                            crossAxisAlignment: .start,
+                            children: [
+                              Text(
+                                element.title,
+                                style: TextStyle(
+                                  decoration: element.isCompleted
+                                      ? .lineThrough
+                                      : .none,
+                                ),
+                              ),
+                              Text(
+                                "${isRTL ? Titles.rtl.taskCreationDate : Titles.ltr.taskCreationDate}: ${element.createdAt.year}-${element.createdAt.month}-${element.createdAt.day}",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => deleteTask(tasks.indexOf(element)),
+                          color: Colors.deepPurple,
+                          padding: .all(5),
+                          iconSize: 20,
+                          constraints: const BoxConstraints(),
+                          style: const ButtonStyle(tapTargetSize: .shrinkWrap),
+                          icon: Icon(Icons.delete),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -291,7 +337,7 @@ class Task {
 abstract final class Titles {
   static const rtl = (
     taskTitle: 'المهام',
-    taskBody: 'فكر، انشئ، اكمل المهام',
+    taskBody: 'فكر، انشئ، اكمل المهامفكر، انشئ، اكمل المهامفكر، انشئ، اكمل المهامفكر، انشئ، اكمل المهامفكر، انشئ، اكمل المهام',
     taskCreationTitle: 'عنوان المهمة:',
     taskCreationDate: 'انشئ بتاريخ: ',
     save: 'حفظ',
